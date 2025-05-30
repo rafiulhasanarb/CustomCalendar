@@ -14,7 +14,7 @@ struct DayView: View {
     @State var isTapped: Bool = false
     
     var body: some View {
-        Text("20")
+        Text("\(Calendar.current.component(.day, from: day))")
             .font(.system(size: 14))
             .foregroundStyle(foregroundColor)
             .frame(width: 30, height: 30)
