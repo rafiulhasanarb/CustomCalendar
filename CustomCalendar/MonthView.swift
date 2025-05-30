@@ -10,7 +10,7 @@ import SwiftUI
 struct MonthView: View {
     
     let month: Date
-    @Binding var selectedDate: Set<Date>
+    @Binding var selectedDates: Set<Date>
     
     var body: some View {
         VStack {
@@ -32,8 +32,9 @@ struct MonthView: View {
                 ForEach(daysInMonth(), id: \.self) { day in
                     if let day = day {
                         DayView(date: day, isSelected: Binding(
-                            get: {isSelected(isSelected(day))},
-                            set: {if $0 { self.selectedDate.insert(day)} else { selectedDate.remove(day)}}))
+                            get: {isSelected(day)},
+                            set: {if $0 { selectedDates.insert(day)}})
+                        )
                         .opacity(1.0)
                     } else {
                         Spacer()
@@ -53,7 +54,7 @@ struct MonthView: View {
         let firstWeekDay = calendar.component(.weekday, from: month)
         var monthDays: [Date?] = Array(repeating: nil, count: firstWeekDay - 1)
         
-        for day in  1..<range.upperBound {
+        for day in  1 ..< range.upperBound {
             dateComponents.day = day
             monthDays.append(calendar.date(from: dateComponents))
         }
@@ -62,12 +63,12 @@ struct MonthView: View {
     }
     
     func isSelected(_ date: Date) -> Bool {
-        selectedDate.contains {
+        selectedDates.contains {
             Calendar.current.isDate($0, inSameDayAs: date)
         }
     }
 }
 
 #Preview {
-    MonthView(month: Date(), selectedDate: .constant([]))
+    MonthView(month: Date(), selectedDates: .constant([]))
 }
