@@ -32,8 +32,17 @@ struct MonthView: View {
                 ForEach(daysInMonth(), id: \.self) { day in
                     if let day = day {
                         DayView(date: day, isSelected: Binding(
-                            get: {isSelected(day)},
-                            set: {if $0 { selectedDates.insert(day)}})
+                            // get: {isSelected(day)},
+                            // set: {if $0 { selectedDates.insert(day)}}
+                            get: { isSelected(day) },
+                            set: { isSelected in
+                                if isSelected {
+                                    selectedDates.insert(day)
+                                } else {
+                                    selectedDates.remove(where: { Calendar.current.isDate($0, inSameDayAs: day)})
+                                }
+                            }
+                        )
                         )
                         .opacity(1.0)
                     } else {
